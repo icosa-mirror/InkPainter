@@ -1,0 +1,16 @@
+{
+	"name": "com.esprogram.inkpainter",
+	"version": "1.2.1",
+	"displayName": "InkPainter",
+	"description": "Texture-Paint on Unity.",
+	"unity": "2021.3",
+	"author": {
+		"name": "esprogram",
+		"email": "es0x17.sup@gmail.com",
+		"url": "http://esprog.hatenablog.com"
+	},
+	"dependencies": {
+	},
+	"scopedRegistries": [
+	]
+}
