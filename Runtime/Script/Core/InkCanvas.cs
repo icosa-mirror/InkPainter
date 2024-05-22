@@ -260,29 +260,6 @@ namespace Es.InkPainter
 
 		private void Awake()
 		{
-			if (Application.isPlaying && paintSet == null)
-			{
-				var renderer = gameObject.GetComponent<Renderer>();
-				var materials = renderer.sharedMaterials;
-				paintSet = new List<PaintSet>();
-
-				if(paintSet.Count < materials.Length)
-				{
-					for (int i = paintSet.Count; i < materials.Length; ++i)
-					{
-						paintSet.Add(new PaintSet
-						{
-							mainTextureName = "_MainTex",
-							normalTextureName = "_BumpMap",
-							heightTextureName = "_ParallaxMap",
-							useMainPaint = true,
-							useNormalPaint = false,
-							useHeightPaint = false,
-						});
-					}
-				}
-			}
-
 			if(OnCanvasAttached != null)
 				OnCanvasAttached(this);
 			InitPropertyID();
