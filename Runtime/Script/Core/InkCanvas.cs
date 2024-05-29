@@ -197,6 +197,7 @@ namespace Es.InkPainter
         private int brushScalePropertyID;
         private int brushRotatePropertyID;
         private int brushColorPropertyID;
+        private int imageAlphaMultiplierPropertyID;
         private int brushNormalTexturePropertyID;
         private int brushNormalBlendPropertyID;
         private int brushHeightTexturePropertyID;
@@ -324,6 +325,7 @@ namespace Es.InkPainter
             brushScalePropertyID = Shader.PropertyToID("_BrushScale");
             brushRotatePropertyID = Shader.PropertyToID("_BrushRotate");
             brushColorPropertyID = Shader.PropertyToID("_ControlColor");
+            imageAlphaMultiplierPropertyID = Shader.PropertyToID("_ImageAlphaMultiplier");
             brushNormalTexturePropertyID = Shader.PropertyToID("_BrushNormal");
             brushNormalBlendPropertyID = Shader.PropertyToID("_NormalBlend");
             brushHeightTexturePropertyID = Shader.PropertyToID("_BrushHeight");
@@ -447,6 +449,7 @@ namespace Es.InkPainter
             paintMainMaterial.SetFloat(brushScalePropertyID, brush.Scale);
             paintMainMaterial.SetFloat(brushRotatePropertyID, brush.RotateAngle);
             paintMainMaterial.SetVector(brushColorPropertyID, brush.Color);
+            paintMainMaterial.SetFloat(imageAlphaMultiplierPropertyID, brush.ImageAlphaMultiplier);
 
             foreach (var key in paintMainMaterial.shaderKeywords)
                 paintMainMaterial.DisableKeyword(key);
