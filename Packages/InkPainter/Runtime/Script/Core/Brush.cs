@@ -118,6 +118,8 @@ namespace Es.InkPainter
 
         [SerializeField] private Color brushColor;
 
+        [SerializeField] [Range(0, 1)] private float imageAlphaMultiplier = 1f;
+
         [SerializeField] private ColorBlendType colorBlendType;
 
         [SerializeField] private NormalBlendType normalBlendType;
@@ -179,6 +181,18 @@ namespace Es.InkPainter
             get => Mathf.Clamp01(brushNormalBlend);
             set => brushNormalBlend = Mathf.Clamp01(value);
         }
+
+        /// <summary>
+        /// Multiplier of the alpha value of the brush texture.
+        /// It takes a range from 0 to 1.
+        /// </summary>
+        public float ImageAlphaMultiplier
+        {
+            get => Mathf.Clamp01(imageAlphaMultiplier);
+            set => imageAlphaMultiplier = Mathf.Clamp01(value);
+        }
+
+
 
         /// <summary>
         /// Blending factor of height information.

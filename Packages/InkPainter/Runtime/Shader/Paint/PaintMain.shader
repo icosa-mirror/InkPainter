@@ -6,6 +6,8 @@ Shader "Es/InkPainter/PaintMain"{
 		_MainTex("MainTex", 2D) = "white"
 		[HideInInspector]
 		_Brush("Brush", 2D) = "white"
+        [HideInInspector]
+		_ImageAlphaMultiplier("ImageAlphaMultiplier", FLOAT) = 1
 		[HideInInspector]
 		_BrushScale("BrushScale", FLOAT) = 0.1
 		[HideInInspector]
@@ -36,6 +38,7 @@ Shader "Es/InkPainter/PaintMain"{
 
 			sampler2D _MainTex;
 			sampler2D _Brush;
+			float _ImageAlphaMultiplier;
 			float4 _PaintUV;
 			float _BrushScale;
 			float _BrushRotate;
@@ -63,6 +66,7 @@ Shader "Es/InkPainter/PaintMain"{
 				if (IsPaintRange(i.uv, _PaintUV, h, _BrushRotate)) {
 					float2 uv = CalcBrushUV(i.uv, _PaintUV, h, _BrushRotate);
 					brushColor = SampleTexture(_Brush, uv.xy);
+                    brushColor.a *= _ImageAlphaMultiplier;
 
 					return INK_PAINTER_COLOR_BLEND(base, brushColor, _ControlColor);
 				}
