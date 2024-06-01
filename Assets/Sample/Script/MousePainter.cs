@@ -2,7 +2,7 @@
 
 namespace Es.InkPainter.Sample
 {
-    public class MousePainter : MonoBehaviour
+    public class MousePainter : BrushController
     {
         /// <summary>
         /// Types of methods used to paint.
@@ -71,6 +71,11 @@ namespace Es.InkPainter.Sample
             if (GUILayout.Button("Reset"))
                 foreach (var canvas in FindObjectsOfType<InkCanvas>())
                     canvas.ResetPaint();
+        }
+
+        public override void SetBrushTexture(RenderTexture brushTexture)
+        {
+            brush.BrushTexture = brushTexture;
         }
     }
 }
