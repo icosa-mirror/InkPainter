@@ -24,6 +24,7 @@ namespace Es.InkPainter.Sample
 
         private void Update()
         {
+            if (Input.GetMouseButtonDown(0)) brush.ResetSpacingCalculation();
             if (Input.GetMouseButton(0))
             {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);

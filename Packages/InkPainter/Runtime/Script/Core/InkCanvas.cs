@@ -776,6 +776,7 @@ namespace Es.InkPainter
             Camera renderCamera = null)
         {
             Vector2 uv;
+            if (!brush.ShouldPaintThisFrame(worldPos)) return false;
 
             if (renderCamera == null)
                 renderCamera = Camera.main;
@@ -804,6 +805,7 @@ namespace Es.InkPainter
         {
             if (hitInfo.collider != null)
             {
+                if (!brush.ShouldPaintThisFrame(hitInfo.point)) return false;
                 if (hitInfo.collider is MeshCollider)
                     return PaintUVDirect(brush, hitInfo.textureCoord, materialSelector);
                 Debug.LogWarning("If you want to paint using a RaycastHit, need set MeshCollider for object.");
