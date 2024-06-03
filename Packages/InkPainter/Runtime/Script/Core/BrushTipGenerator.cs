@@ -1,6 +1,7 @@
 using System;
 using Es.InkPainter;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BrushTipGenerator : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class BrushTipGenerator : MonoBehaviour
     [Range(0, 180)] public float angle = 0.0f;
     public int textureSize = 256;
     public GameObject debugQuad;
-    public BrushController painter;
+    public GameObject brushControllerGameObject;
 
     private Material brushMaterial;
     private RenderTexture brushTexture;
@@ -22,11 +23,13 @@ public class BrushTipGenerator : MonoBehaviour
     private static readonly int Softness = Shader.PropertyToID("_Softness");
     private static readonly int Aspect = Shader.PropertyToID("_Aspect");
     private static readonly int Angle = Shader.PropertyToID("_Angle");
+    private ITextureBrushController brushController;
 
     void Awake()
     {
         // Initialize shader material
         brushMaterial = new Material(brushShader);
+        brushController = brushControllerGameObject.GetComponent<ITextureBrushController>();
 
         // Create RenderTexture
         brushTexture = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.ARGB32);
@@ -54,7 +57,7 @@ public class BrushTipGenerator : MonoBehaviour
 
         // Render the texture
         Graphics.Blit(null, brushTexture, brushMaterial);
-        painter.SetBrushTexture(brushTexture);
+        brushController.SetBrushTexture(brushTexture);
         if (debugQuad != null)
         {
             debugQuad.GetComponent<MeshRenderer>().material.mainTexture = brushTexture;

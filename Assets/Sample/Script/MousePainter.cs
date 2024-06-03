@@ -2,7 +2,7 @@
 
 namespace Es.InkPainter.Sample
 {
-    public class MousePainter : BrushController
+    public class MousePainter : MonoBehaviour, ITextureBrushController
     {
         /// <summary>
         /// Types of methods used to paint.
@@ -60,9 +60,6 @@ namespace Es.InkPainter.Sample
                                     : paintObject.PaintUVDirect(brush, hitInfo.textureCoord);
                                 break;
                         }
-
-                    if (!success)
-                        Debug.LogError("Failed to paint.");
                 }
             }
         }
@@ -74,9 +71,10 @@ namespace Es.InkPainter.Sample
                     canvas.ResetPaint();
         }
 
-        public override void SetBrushTexture(RenderTexture brushTexture)
+        public void SetBrushTexture(RenderTexture brushTexture)
         {
             brush.BrushTexture = brushTexture;
         }
+
     }
 }

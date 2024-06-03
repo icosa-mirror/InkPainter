@@ -528,7 +528,7 @@ MonoBehaviour:
   angle: 23
   textureSize: 256
   debugQuad: {fileID: 297842641}
-  painter: {fileID: 1420899394}
+  brushControllerGameObject: {fileID: 1420899388}
 --- !u!1 &1643212148
 GameObject:
   m_ObjectHideFlags: 0
