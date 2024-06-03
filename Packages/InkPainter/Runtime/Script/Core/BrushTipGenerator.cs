@@ -40,12 +40,14 @@ public class BrushTipGenerator : MonoBehaviour
         UpdateBrushTexture();
     }
 
+    #if UNITY_EDITOR
     private void OnValidate()
     {
         // Just for testing via Inspector
-        if (!Application.isPlaying && !Application.isEditor) return;
+        if (!Application.isPlaying) return;
         UpdateBrushTexture();
     }
+    #endif
 
     public void UpdateBrushTexture()
     {
