@@ -112,6 +112,8 @@ namespace Es.InkPainter
 
         [SerializeField] [Range(0, 360)] private float rotateAngle = 0;
 
+        [SerializeField] [Range(0, 1)] private float brushSpacing = 0;
+
         [SerializeField] [Range(0, 1)] private float brushNormalBlend = 0.1f;
 
         [SerializeField] [Range(0, 1)] private float brushHeightBlend = 0.1f;
@@ -125,6 +127,7 @@ namespace Es.InkPainter
         [SerializeField] private NormalBlendType normalBlendType;
 
         [SerializeField] private HeightBlendType heightBlendType;
+        private Vector3 lastWorldPos = Vector3.positiveInfinity;
 
         /// <summary>
         /// Brush texture.
@@ -281,6 +284,24 @@ namespace Es.InkPainter
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public bool ShouldPaintThisFrame(Vector3 worldPos)
+        {
+            if (lastWorldPos == Vector3.positiveInfinity)
+            {
+                lastWorldPos = worldPos;
+                return true;
+            }
+            float distance = Vector3.Distance(worldPos, lastWorldPos);
+            Debug.Log($"Distance: {distance}, BrushSpacing: {brushSpacing}");
+            lastWorldPos = worldPos;
+            return distance > brushSpacing;
+        }
+
+        public void ResetSpacingCalculation()
+        {
+            lastWorldPos = Vector3.positiveInfinity;
         }
     }
 }
