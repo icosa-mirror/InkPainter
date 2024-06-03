@@ -42,11 +42,12 @@ public class BrushTipGenerator : MonoBehaviour
 
     private void OnValidate()
     {
-        if (!Application.isPlaying) return;
+        // Just for testing via Inspector
+        if (!Application.isPlaying && !Application.isEditor) return;
         UpdateBrushTexture();
     }
 
-    void UpdateBrushTexture()
+    public void UpdateBrushTexture()
     {
         if (brushMaterial == null) return;
         brushMaterial.SetColor(Color1, color);
@@ -61,15 +62,6 @@ public class BrushTipGenerator : MonoBehaviour
         if (debugQuad != null)
         {
             debugQuad.GetComponent<MeshRenderer>().material.mainTexture = brushTexture;
-        }
-    }
-
-    void Update()
-    {
-        // Update the brush texture if parameters change
-        if (Input.GetKeyDown(KeyCode.Space)) // Example trigger
-        {
-            UpdateBrushTexture();
         }
     }
 
