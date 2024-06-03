@@ -483,6 +483,7 @@ MonoBehaviour:
     brushHeightTexture: {fileID: 0}
     brushScale: 0.1
     rotateAngle: 0
+    brushSpacing: 0
     brushNormalBlend: 0
     brushHeightBlend: 0
     brushColor: {r: 0.421064, g: 0.42414397, b: 0.86764705, a: 1}
@@ -521,8 +522,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brushShader: {fileID: 4800000, guid: c6058beef3b954dd281f8b7c11216858, type: 3}
   color: {r: 0.8867924, g: 0.14640439, b: 0.14640439, a: 1}
-  opacity: 0.421
-  softness: 1
+  opacity: 1
+  softness: 0.033
   aspect: 0.532
   angle: 23
   textureSize: 256
