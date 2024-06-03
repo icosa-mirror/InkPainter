@@ -294,7 +294,6 @@ namespace Es.InkPainter
                 return true;
             }
             float distance = Vector3.Distance(worldPos, lastWorldPos);
-            Debug.Log($"Distance: {distance}, BrushSpacing: {brushSpacing}");
             lastWorldPos = worldPos;
             return distance > brushSpacing;
         }

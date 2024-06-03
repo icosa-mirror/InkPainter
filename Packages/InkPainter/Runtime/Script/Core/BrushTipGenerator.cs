@@ -1,7 +1,5 @@
-using System;
 using Es.InkPainter;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class BrushTipGenerator : MonoBehaviour
 {
