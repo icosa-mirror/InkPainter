@@ -815,6 +815,94 @@ namespace Es.InkPainter
             return false;
         }
 
+        public bool FillUVDirect(Brush brush, Vector2 uv, Func<PaintSet, bool> materialSelector = null)
+        {
+            #region ErrorCheck
+
+            if (brush == null)
+            {
+                Debug.LogError("Do not set the brush.");
+                eraseFlag = false;
+                return false;
+            }
+
+            #endregion ErrorCheck
+
+            if (OnPaintStart != null)
+            {
+                brush = brush.Clone() as Brush;
+                OnPaintStart(this, brush);
+            }
+
+            var set = materialSelector == null ? paintSet : paintSet.Where(materialSelector);
+            foreach (var p in set)
+            {
+                var mainPaintConditions = p.useMainPaint && brush.BrushTexture != null && p.paintMainTexture != null &&
+                                          p.paintMainTexture.IsCreated();
+
+                if (mainPaintConditions)
+                {
+
+                    Vector2Int point = new Vector2Int();
+                    // Convert uv to pixel coordinates
+                    point.x = (int)(uv.x * p.paintMainTexture.width);
+                    point.y = (int)(uv.y * p.paintMainTexture.height);
+                    Debug.Log($"FloodFill Start: {point}");
+                    ImageFloodFill.FillFromPoint(p.paintMainTexture, brush.Color, point, 0.5f);
+                }
+            }
+
+            if (OnPaintEnd != null)
+                OnPaintEnd(this);
+
+            return true;
+        }
+
+        public bool Fill(Brush brush, Vector3 worldPos, Func<PaintSet, bool> materialSelector = null,
+            Camera renderCamera = null)
+        {
+            Vector2 uv;
+            if (!brush.ShouldPaintThisFrame(worldPos)) return false;
+
+            if (renderCamera == null)
+                renderCamera = Camera.main;
+
+            var p = transform.InverseTransformPoint(worldPos);
+            var mvp = renderCamera.projectionMatrix * renderCamera.worldToCameraMatrix * transform.localToWorldMatrix;
+            if (MeshOperator.LocalPointToUV(p, mvp, out uv))
+            {
+                return FillUVDirect(brush, uv, materialSelector);
+            }
+            else
+            {
+                Debug.LogWarning("Could not get the point on the surface.");
+                return FillNearestTriangleSurface(brush, worldPos, materialSelector, renderCamera);
+            }
+        }
+
+        public bool FillNearestTriangleSurface(Brush brush, Vector3 worldPos,
+            Func<PaintSet, bool> materialSelector = null, Camera renderCamera = null)
+        {
+            var p = transform.worldToLocalMatrix.MultiplyPoint(worldPos);
+            var pd = MeshOperator.NearestLocalSurfacePoint(p);
+
+            return Fill(brush, transform.localToWorldMatrix.MultiplyPoint(pd), materialSelector, renderCamera);
+        }
+
+        public bool Fill(Brush brush, RaycastHit hitInfo, Func<PaintSet, bool> materialSelector = null)
+        {
+            if (hitInfo.collider != null)
+            {
+                if (!brush.ShouldPaintThisFrame(hitInfo.point)) return false;
+                if (hitInfo.collider is MeshCollider)
+                    return FillUVDirect(brush, hitInfo.textureCoord, materialSelector);
+                Debug.LogWarning("If you want to paint using a RaycastHit, need set MeshCollider for object.");
+                return FillNearestTriangleSurface(brush, hitInfo.point, materialSelector);
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Erase processing that UV coordinates to the specified.
         /// </summary>
