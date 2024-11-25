@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Es.InkPainter.Effective;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
 using System.IO;
@@ -148,6 +149,11 @@ namespace Es.InkPainter
 #pragma warning disable 0649
         private bool eraserDebug;
 #pragma warning restore 0649
+
+        [SerializeField] [Tooltip("Whether to use the main texture as a fill mask.")]
+        public bool UseMainTextureAsFillMask = false;
+        [SerializeField] [Tooltip("Luma threshold for the fill mask.")]
+        public float FillMaskThreshold = 0.05f;
 
         /// <summary>
         /// Access data used for painting.
@@ -837,6 +843,11 @@ namespace Es.InkPainter
             var set = materialSelector == null ? paintSet : paintSet.Where(materialSelector);
             foreach (var p in set)
             {
+                Texture mask = null;
+                if (UseMainTextureAsFillMask)
+                {
+                    mask = p.mainTexture;
+                }
                 var mainPaintConditions = p.useMainPaint && brush.BrushTexture != null && p.paintMainTexture != null &&
                                           p.paintMainTexture.IsCreated();
 
@@ -847,8 +858,7 @@ namespace Es.InkPainter
                     // Convert uv to pixel coordinates
                     point.x = (int)(uv.x * p.paintMainTexture.width);
                     point.y = (int)(uv.y * p.paintMainTexture.height);
-                    Debug.Log($"FloodFill Start: {point}");
-                    ImageFloodFill.FillFromPoint(p.paintMainTexture, brush.Color, point, 0.5f);
+                    ImageFloodFill.FillFromPoint(p.paintMainTexture, brush.Color, point, 0.5f, mask, FillMaskThreshold);
                 }
             }
 
@@ -1137,6 +1147,12 @@ namespace Es.InkPainter
                     materials = renderer.sharedMaterials;
                 if (foldOut == null)
                     foldOut = new List<bool>();
+
+                instance.UseMainTextureAsFillMask =
+                    EditorGUILayout.Toggle("Use Main Texture As Fill Mask", instance.UseMainTextureAsFillMask);
+                instance.FillMaskThreshold =
+                    EditorGUILayout.FloatField("Fill Mask Threshold", instance.FillMaskThreshold);
+
 
                 if (instance.paintSet.Count < materials.Length)
                 {

@@ -5,12 +5,14 @@ namespace Es.InkPainter
 {
     public static class ImageFloodFill
     {
-        public static void FillFromPoint(Texture texture, Color color, Vector2Int point, float threshold = 0f)
+        public static void FillFromPoint(Texture texture, Color color, Vector2Int point, float threshold = 0f,
+            Texture mask = null, float maskThreshold = 0.05f)
         {
-            FillFromPoints(texture, color, new Vector2Int[] { point }, threshold);
+            FillFromPoints(texture, color, new Vector2Int[] { point }, threshold, mask, maskThreshold);
         }
 
-        public static void FillFromCorners(Texture texture, Color color, float threshold = 0f)
+        public static void FillFromCorners(Texture texture, Color color, float threshold = 0f,
+            Texture mask = null, float maskThreshold = 0.05f)
         {
             var points = new Vector2Int[]
             {
@@ -19,10 +21,11 @@ namespace Es.InkPainter
                 new Vector2Int(0, texture.height - 1),
                 new Vector2Int(texture.width - 1, texture.height - 1)
             };
-            FillFromPoints(texture, color, points, threshold);
+            FillFromPoints(texture, color, points, threshold, mask, maskThreshold);
         }
 
-        public static void FillFromPoints(Texture texture, Color color, Vector2Int[] points, float threshold = 0f)
+        public static void FillFromPoints(Texture texture, Color color, Vector2Int[] points, float threshold = 0f,
+            Texture mask = null, float maskThreshold = 0.05f)
         {
             Texture2D texture2d;
             if (texture is Texture2D)
@@ -39,13 +42,37 @@ namespace Es.InkPainter
                 return;
             }
 
+            Texture2D mask2d = null;
+            if (mask != null)
+            {
+                if (mask is Texture2D)
+                {
+                    mask2d = (Texture2D)mask;
+                }
+                else if (mask is RenderTexture)
+                {
+                    mask2d = RenderTextureToTexture2D((RenderTexture)mask);
+                }
+                else
+                {
+                    Debug.LogError("Unsupported mask type: " + mask.GetType());
+                    return;
+                }
+            }
+
             Color[] pixelsLinear = texture2d.GetPixels();
             int width = texture2d.width;
             int height = texture2d.height;
 
+            Color[] maskLinear = null;
+            if (mask2d != null)
+            {
+                maskLinear = mask2d.GetPixels();
+            }
+
             foreach (Vector2Int point in points)
             {
-                FillPixels(pixelsLinear, point, width, height, color, threshold);
+                FillPixels(pixelsLinear, point, width, height, color, threshold, maskLinear, maskThreshold);
             }
 
             texture2d.SetPixels(pixelsLinear);
@@ -59,7 +86,7 @@ namespace Es.InkPainter
         }
 
         static void FillPixels(Color[] pixels, Vector2Int startPoint, int width, int height, Color color,
-            float threshold)
+            float threshold, Color[] maskPixels, float maskThreshold)
         {
             bool[] pixelsHandled = new bool[width * height];
             Color originColor = pixels[startPoint.y * width + startPoint.x];
@@ -75,7 +102,14 @@ namespace Es.InkPainter
                 {
                     pixelsHandled[index] = true;
 
-                    if (ColorDistance(pixels[index], originColor) <= threshold)
+                    float maskLuma = 1f;
+                    if (maskPixels != null)
+                    {
+                        // TODO
+                        // Not strictly the same as luma
+                        maskLuma = maskPixels[index].grayscale;
+                    }
+                    if (ColorDistance(pixels[index], originColor) <= threshold && maskLuma >= maskThreshold)
                     {
                         pixels[index] = color;
 
