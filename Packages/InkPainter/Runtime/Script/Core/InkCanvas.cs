@@ -277,7 +277,6 @@ namespace Es.InkPainter
 
         private void OnDestroy()
         {
-            Debug.Log("InkCanvas has been destroyed.");
             ReleaseRenderTexture();
         }
 
@@ -1331,8 +1330,6 @@ namespace Es.InkPainter
                         if (importAction != null)
                             importAction(importer);
                     }
-
-                    Debug.Log(path);
                 }
             }
 
