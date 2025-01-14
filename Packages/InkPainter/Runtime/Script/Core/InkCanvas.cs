@@ -154,6 +154,8 @@ namespace Es.InkPainter
         public bool UseMainTextureAsFillMask = false;
         [SerializeField] [Tooltip("Luma threshold for the fill mask.")]
         public float FillMaskThreshold = 0.05f;
+        [SerializeField] [Tooltip("Luma threshold for the fill.")]
+        public float FillThreshold = 0.5f;
 
         /// <summary>
         /// Access data used for painting.
@@ -857,7 +859,7 @@ namespace Es.InkPainter
                     // Convert uv to pixel coordinates
                     point.x = (int)(uv.x * p.paintMainTexture.width);
                     point.y = (int)(uv.y * p.paintMainTexture.height);
-                    ImageFloodFill.FillFromPoint(p.paintMainTexture, brush.Color, point, 0.5f, mask, FillMaskThreshold);
+                    ImageFloodFill.FillFromPoint(p.paintMainTexture, brush.Color, point, FillThreshold, mask, FillMaskThreshold);
                 }
             }
 
