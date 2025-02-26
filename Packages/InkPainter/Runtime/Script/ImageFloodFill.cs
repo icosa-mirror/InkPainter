@@ -93,10 +93,14 @@ namespace Es.InkPainter
             var stack = new Stack<Vector2Int>();
             stack.Push(startPoint);
 
+
+            int i = 0;
             while (stack.Count > 0)
             {
                 Vector2Int point = stack.Pop();
                 int index = point.y * width + point.x;
+
+                Debug.Log($"FillPixels {i++}");
 
                 if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height && !pixelsHandled[index])
                 {
