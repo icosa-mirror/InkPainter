@@ -82,7 +82,7 @@ namespace Es.InkPainter
             if (texture is RenderTexture)
             {
                 Texture2DToRenderTexture(texture2d, (RenderTexture)texture);
-                Destroy(texture2d);
+                UnityEngine.Objet.Destroy(texture2d);
             }
         }
 
