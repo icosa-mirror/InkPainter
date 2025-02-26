@@ -139,6 +139,10 @@ namespace Es.InkPainter
             texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
             texture.Apply();
             RenderTexture.active = currentRT;
+
+            Debug.Log($"RenderTextureToTexture2D: testing");
+            Object.Destroy(texture);
+
             return texture;
         }
 
