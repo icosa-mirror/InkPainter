@@ -82,6 +82,7 @@ namespace Es.InkPainter
             if (texture is RenderTexture)
             {
                 Texture2DToRenderTexture(texture2d, (RenderTexture)texture);
+                Destroy(texture2d);
             }
         }
 
@@ -141,7 +142,6 @@ namespace Es.InkPainter
             RenderTexture.active = currentRT;
 
             Debug.Log($"RenderTextureToTexture2D: testing");
-            Object.Destroy(texture);
 
             return texture;
         }
