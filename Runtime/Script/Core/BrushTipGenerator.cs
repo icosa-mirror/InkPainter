@@ -10,7 +10,7 @@ public class BrushTipGenerator : MonoBehaviour
     [Range(0, 1)] public float softness = 0.5f;
     [Range(0, 1)] public float aspect = 1.0f;
     [Range(0, 180)] public float angle = 0.0f;
-    public int textureSize = 256;
+    public int textureSize = 1024;
     public GameObject debugQuad;
     public GameObject brushControllerGameObject;
 
